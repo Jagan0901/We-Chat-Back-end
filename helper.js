@@ -20,3 +20,16 @@ export async function createUser(name, email, hashedPassword, pic) {
     .collection("users")
     .insertOne({name:name, email: email, password:hashedPassword,pic:pic });
 }
+
+//Searching User
+
+
+export async function searchingUser(keyword) {
+  return await client
+    .db("We-Chat")
+    .collection("users")
+    .find(keyword)
+    // .findOne({ _id: { $ne: ObjectId(loginedUserId) } })
+    .toArray();
+}
+

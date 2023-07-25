@@ -1,7 +1,8 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { getUserByMail, genPassword, createUser } from '../helper.js';
+import { getUserByMail, genPassword, createUser, searchingUser} from '../helper.js';
+import { auth } from './../middleware/auth.js';
 
 const router = express.Router();
 
@@ -58,7 +59,30 @@ router.post("/login", async(req,res)=>{
   pic:userFromDB.pic, 
   token: token
 })
-})
+});
+
+//Search user
+router.get("/user",auth,async(req,res)=>{
+  const {loggedInUserId} = req.body;
+
+  const keyword = req.query.search
+    ? {
+        $or: [
+          { name: { $regex: req.query.search, $options: "i" } },
+          { email: { $regex: req.query.search, $options: "i" } },
+        ],        
+      }
+    : {};
+  
+  const isUserExists = await searchingUser(keyword);
+  const ignoringLoggedInUser = isUserExists.filter((e)=>e["_id"] != loggedInUserId);
+  
+  if(!isUserExists){
+    res.status(400).send({error:"Some error occurs while getting the users"});
+    return;
+  }
+  res.send(ignoringLoggedInUser);
+});
 
 
 export const usersRouter = router;
