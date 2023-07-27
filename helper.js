@@ -38,6 +38,14 @@ export async function searchingUser(keyword) {
 
 //create on-one chat
 //1.
+export async function checkUserExists(objectId) {
+  return await client
+    .db("We-Chat")
+    .collection("users")
+    .findOne({ _id: objectId });
+}
+
+//2.
 export async function getChatsByUserIds(keyword){
   return await client
     .db("We-Chat")
@@ -45,7 +53,7 @@ export async function getChatsByUserIds(keyword){
     .findOne(keyword);
 }
 
-//2.
+//3.
 export async function getUserDataById(objectId){
   return await client
     .db("We-Chat")
@@ -53,7 +61,7 @@ export async function getUserDataById(objectId){
     .findOne({ _id: objectId });
 }
 
-//3.
+//4.
 export async function create(data){
   return await client
     .db("We-Chat")

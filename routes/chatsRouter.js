@@ -1,6 +1,6 @@
 import express from 'express';
 import { auth } from '../middleware/auth.js';
-import { getChatsByUserIds, getUserDataById, create} from '../helper.js';
+import {checkUserExists, getChatsByUserIds, getUserDataById, create} from '../helper.js';
 import { ObjectId } from 'mongodb';
 
 const router = express.Router();
@@ -11,6 +11,15 @@ router.post("/singleChat",auth, async(req,res)=>{
 
     const objectId = new ObjectId(loggedInUserId);
     const objectId1 = new ObjectId(userId);
+
+    const isUserExists  = await checkUserExists(objectId);
+    const isUser1Exists = await checkUserExists(objectId1);
+    
+    if(!isUserExists || !isUser1Exists){
+      res.status(400).send({error:"Users not exists"});
+      return;
+    }
+
     const keyword = {
       $and: [
         { users: { $elemMatch: { _id: objectId } } },
@@ -27,6 +36,11 @@ router.post("/singleChat",auth, async(req,res)=>{
         
         const getUserDetails = await getUserDataById(objectId1);
         let arr = [];
+
+        const removePassword = 'password';
+        delete getLoggedInUserDetails[removePassword];
+        delete getUserDetails[removePassword];
+
         arr.push(getLoggedInUserDetails);
         arr.push(getUserDetails); 
 
@@ -42,7 +56,7 @@ router.post("/singleChat",auth, async(req,res)=>{
         res.send(getChat);
         return;
         } else{
-          res.status(400).send({error:"Some error occurs"})
+          res.status(400).send({error:"Unable to create a chat"})
           return;
         }
     }
