@@ -1,6 +1,6 @@
 import express from 'express';
 import { auth } from '../middleware/auth.js';
-import { getChatsByUserIds, getUserDataById, create, byGivenId } from '../helper.js';
+import { getChatsByUserIds, getUserDataById, create} from '../helper.js';
 import { ObjectId } from 'mongodb';
 
 const router = express.Router();
@@ -36,7 +36,7 @@ router.post("/singleChat",auth, async(req,res)=>{
         }
 
         const chatCreation = await create(data);
-        
+
         if(chatCreation){
         const getChat = await getChatsByUserIds(keyword);
         res.send(getChat);

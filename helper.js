@@ -41,7 +41,7 @@ export async function searchingUser(keyword) {
 export async function getChatsByUserIds(keyword){
   return await client
     .db("We-Chat")
-    .collection("singleChats")
+    .collection("chats")
     .findOne(keyword);
 }
 
@@ -57,15 +57,9 @@ export async function getUserDataById(objectId){
 export async function create(data){
   return await client
     .db("We-Chat")
-    .collection("singleChats")
+    .collection("chats")
     .insertOne(data);
 }
 
-//4.
-export async function byGivenId(id){
-  return await client
-    .db("We-Chat")
-    .collection("singleChats")
-    .findOne({_id:id});
-}
+
 
