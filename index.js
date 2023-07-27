@@ -3,6 +3,7 @@ import cors from "cors";
 import * as dotenv from "dotenv";
 import { MongoClient } from 'mongodb';
 import { usersRouter } from './routes/usersRouter.js';
+import { chatsRouter } from './routes/chatsRouter.js';
 
 dotenv.config();
 
@@ -25,6 +26,7 @@ async function createConnection(){
  export const client = await createConnection();
 
  app.use("/users",usersRouter);
+ app.use("/chats",chatsRouter);
 
  app.get("/",async(req,res)=>{
     res.send("Hi There!!!");

@@ -1,5 +1,7 @@
+
 import { client } from "./index.js";
 import bcrypt from 'bcrypt';
+
 
 export async function getUserByMail(email){
     return await client
@@ -31,5 +33,39 @@ export async function searchingUser(keyword) {
     .find(keyword)
     // .findOne({ _id: { $ne: ObjectId(loginedUserId) } })
     .toArray();
+}
+
+
+//create on-one chat
+//1.
+export async function getChatsByUserIds(keyword){
+  return await client
+    .db("We-Chat")
+    .collection("singleChats")
+    .findOne(keyword);
+}
+
+//2.
+export async function getUserDataById(objectId){
+  return await client
+    .db("We-Chat")
+    .collection("users")
+    .findOne({ _id: objectId });
+}
+
+//3.
+export async function create(data){
+  return await client
+    .db("We-Chat")
+    .collection("singleChats")
+    .insertOne(data);
+}
+
+//4.
+export async function byGivenId(id){
+  return await client
+    .db("We-Chat")
+    .collection("singleChats")
+    .findOne({_id:id});
 }
 

@@ -43,6 +43,7 @@ router.post("/login", async(req,res)=>{
     res.status(400).send({ error: "Invalid Email or Password" });
     return;
   }
+  console.log(typeof(email));
   const storedDBPassword = userFromDB.password;
   //To compare entered password and DB password are same
   const isPasswordMatch = await bcrypt.compare(password,storedDBPassword);
