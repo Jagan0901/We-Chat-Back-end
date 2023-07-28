@@ -8,6 +8,15 @@ const router = express.Router();
 //create one-one chat
 router.post("/singleChat",auth, async(req,res)=>{
     const{loggedInUserId,userId} = req.body;
+    const isIdValid  = loggedInUserId.split('')
+    const isId1Valid = userId.split('');
+
+    if(isIdValid.length!==24 || isId1Valid.length!==24){
+      res.status(400).send({error:"Invalid User Id. User Id must be a string of 12 bytes or a string of 24 hex characters or an integer"});
+      return;
+    }
+
+    // console.log(isIdValid)
 
     const objectId = new ObjectId(loggedInUserId);
     const objectId1 = new ObjectId(userId);
