@@ -63,7 +63,8 @@ router.post("/login", async(req,res)=>{
 });
 
 //Search user
-router.get("/user",auth,async(req,res)=>{
+//Tried POST instead of GET. If you face any error, replace with GET.
+router.post("/user",auth,async(req,res)=>{
   const {loggedInUserId} = req.body;
 
   const keyword = req.query.search
