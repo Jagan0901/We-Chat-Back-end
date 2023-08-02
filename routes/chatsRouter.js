@@ -55,8 +55,10 @@ router.post("/singleChat",auth, async(req,res)=>{
 
         const data = {
           users: [...arr],
-          chats: []
-        }
+          chats: [],
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
 
         const chatCreation = await create(data);
 
