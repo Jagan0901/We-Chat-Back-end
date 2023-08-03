@@ -127,7 +127,7 @@ router.post("/getUsers",auth,async(req,res)=>{
     users:[...result] 
   }
   const dataThatUserPartOf = JSON.stringify(data);
-  res.send(dataThatUserPartOf);
+  res.send(getUsers);
 });
 
 export const chatsRouter = router;
