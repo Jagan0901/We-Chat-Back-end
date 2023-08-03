@@ -1,6 +1,12 @@
 import express from 'express';
 import { auth } from '../middleware/auth.js';
-import {checkUserExists, getChatsByUserIds, getUserDataById, create} from '../helper.js';
+import {
+  checkUserExists,
+  getChatsByUserIds,
+  getUserDataById,
+  create,
+  loggedInUserInvolved,
+} from "../helper.js";
 import { ObjectId } from 'mongodb';
 
 const router = express.Router();
@@ -71,6 +77,57 @@ router.post("/singleChat",auth, async(req,res)=>{
           return;
         }
     }
+});
+
+
+//get users that the loggedIn user part of
+router.post("/getUsers",auth,async(req,res)=>{
+  const { loggedInUserId } = req.body;
+  const isIdValid = loggedInUserId.split("");
+
+  if (isIdValid.length !== 24 ) {
+    res
+      .status(400)
+      .send({
+        error:
+          "Invalid User Id. User Id must be a string of 12 bytes or a string of 24 hex characters or an integer",
+      });
+    return;
+  }
+
+  // console.log(isIdValid)
+
+  const objectId = new ObjectId(loggedInUserId);
+
+  const isUserExists = await checkUserExists(objectId);
+
+  if (!isUserExists) {
+    res.status(400).send({ error: "User not exists" });
+    return;
+  }
+
+  const keyword = {
+      users: { $elemMatch: { _id: objectId } } 
+  };
+
+  const getUsers = await loggedInUserInvolved(keyword);
+  if(!getUsers){
+    res.send({message:"Chats not created for this particular user."});
+    return;
+  }
+  
+  const usersArray = [];
+  getUsers.forEach((item)=>{
+    if(item.users[0]._id == loggedInUserId) usersArray.push(item.users[1]);
+    else if(item.users[1]._id == loggedInUserId) usersArray.push(item.users[0]);
+  })
+  const result =  [...usersArray];
+  const data = {
+    _id:loggedInUserId,
+    users:[...result] 
+  }
+  const dataThatUserPartOf = JSON.stringify(data);
+  res.send(dataThatUserPartOf);
 });
 
 export const chatsRouter = router;

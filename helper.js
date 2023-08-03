@@ -69,5 +69,16 @@ export async function create(data){
     .insertOne(data);
 }
 
+//get users that loggedUser part of
+export async function loggedInUserInvolved(keyword){
+  return await client
+    .db("We-Chat")
+    .collection("chats")
+    .find(keyword)
+    .sort({ updatedAt : -1})
+    .toArray();
+}
+
+
 
 
