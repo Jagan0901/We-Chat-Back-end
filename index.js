@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 import { MongoClient } from 'mongodb';
 import { usersRouter } from './routes/usersRouter.js';
 import { chatsRouter } from './routes/chatsRouter.js';
+import { messagesRouter } from './routes/messagesRouter.js';
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ async function createConnection(){
 
  app.use("/users",usersRouter);
  app.use("/chats",chatsRouter);
+ app.use("/messages", messagesRouter);
 
  app.get("/",async(req,res)=>{
     res.send("Hi There!!!");

@@ -80,5 +80,22 @@ export async function loggedInUserInvolved(keyword){
 }
 
 
+//to create one-one messages
+
+export async function getChatByChatId(id) {
+  return await client
+    .db("We-Chat")
+    .collection("chats")
+    .findOne({_id:id})
+}
+
+export async function updateChatsArray(id,chats,now) {
+  return await client
+    .db("We-Chat")
+    .collection("chats")
+    .updateOne({_id:id},{$set:{chats:chats,updatedAt:now}})
+}
+
+
 
 
